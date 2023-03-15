@@ -98,6 +98,8 @@ void sort_by_last_mod(listnode** list)
         }
         node1 = node1->next;
     }
+    free(node1);
+    free(node2);
 }
 
 void sort_by_ascii(listnode* list)
@@ -116,6 +118,8 @@ void sort_by_ascii(listnode* list)
         }
         node1 = node1->next;
     }
+    free(node1);
+    free(node2);
 }
 
 listnode* all_dirs()
@@ -132,6 +136,7 @@ listnode* all_dirs()
         new_list(&list, page->d_name, info);
     }
     return list;
+    free(list);
 }
 
 void files_in_folder(listnode* list, int flag, int num_files, int j, int folders, int count)
@@ -173,7 +178,7 @@ void files_in_folder(listnode* list, int flag, int num_files, int j, int folders
         sort_by_ascii(files);
         print_line(files, 2);
     }
-        
+    free(files);
 }
 
 void files_folders(char **arr, int flag)
@@ -236,11 +241,14 @@ void files_folders(char **arr, int flag)
         int count = 0;
         while(folders)
         {
+            sort_by_ascii(folders);
             files_in_folder(folders,flag, file, j, folder, count);
             folders = folders->next;
             count++;
         }
     }    
+    free(folders);
+    free(files);
 }
 
 void input(int a, int t, int j, int all, char** str, int argc)
@@ -285,36 +293,12 @@ void input(int a, int t, int j, int all, char** str, int argc)
     {
         files_folders(str,2);
     }
-
-}
-
-int check(char** av, int ac)
-{
-    int num = 0;
-    for(int i = 1 ; i < ac; i++)
-    {
-        if(strcmp(av[i], ".") == 0 || strcmp(av[i], "/") == 0 || strcmp(av[i], "/tmp/") == 0)
-        {
-            num++;
-        }
-    }
-    if(num == 3)
-    {
-        return 1;
-    }
-    return 0;
 }
 
 int main(int argc, char **argv)
 {
     char **str = (char**)malloc(sizeof(char*) * argc);
     int a = 0, t = 0, all = 0, j = 0;
-    if(check(argv, argc))
-    {
-        char* tmp = argv[2];
-        argv[2] = argv[3];
-        argv[3] = tmp;
-    }
 
     for(int i = 1; i < argc; i++)
     {
@@ -335,7 +319,6 @@ int main(int argc, char **argv)
             str[j++] = argv[i];
         }
     }
-
     input(a, t,  j,  all,  str,  argc);
     free(str);
 }
