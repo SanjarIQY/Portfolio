@@ -1,0 +1,35 @@
+
+<html>
+    <div id="my_box_realtime" style="background-color: red; position: absolute; right: 70px; bottom: 70px; min-width: 100px; min-height: 100px"></div>
+    <script type="text/javascript">
+        var box = document.getElementById("my_box_realtime");
+        var currentPosition = { 
+            right: parseInt(box.style.right),
+            bottom: parseInt(box.style.bottom)
+        };
+        var targetPosition = {
+            right: 0,
+            bottom: 0
+        };
+        
+        var direction = {
+            right: targetPosition.right - currentPosition.right > 0 ? 1 : -1,
+            bottom: targetPosition.bottom - currentPosition.bottom > 0 ? 1 : -1
+        };
+        
+        var interval = setInterval(moveBox, 500); 
+        
+        function moveBox() {
+            if (currentPosition.right === targetPosition.right && currentPosition.bottom === targetPosition.bottom) {
+                clearInterval(interval);
+                return;
+            }
+            
+            currentPosition.right += direction.right;
+            currentPosition.bottom += direction.bottom;
+            
+            box.style.right = currentPosition.right + "px";
+            box.style.bottom = currentPosition.bottom + "px";
+        }
+    </script>
+</html>
