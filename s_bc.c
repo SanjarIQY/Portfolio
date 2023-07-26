@@ -47,7 +47,7 @@ int priority(char operator)
     return -1;
 }
 
-int operation_part(int left_side, int right_side, char operator)
+void operation_part(int left_side, int right_side, char operator)
 {
     int result = 0;
     switch (operator) {
@@ -61,8 +61,6 @@ int operation_part(int left_side, int right_side, char operator)
             result = left_side * right_side;
             break;
         case '/':
-            if(right_side == 0) 
-                return 0;
             result = left_side / right_side;
             break;
         case '%':
@@ -70,10 +68,9 @@ int operation_part(int left_side, int right_side, char operator)
             break;
     }
     push(&stack_list, result);
-    return 1;
 }
 
-void math_part()
+int math_part()
 {
     while(1){
         while(queue_list->value == '\0' && queue_list != NULL)
@@ -82,24 +79,15 @@ void math_part()
             deque(&queue_list);
         }
         if(stack_list->next == NULL)
-        {
-            printf("%d\n",stack_list->value);
-            return;
-        }
-            
+            return stack_list->value;
         int right_side = pop(&stack_list);
         int left_side = pop(&stack_list);
-        if(operation_part(left_side, right_side, queue_list->value) == 0)
-        {
-            write(2, "divide by zero\n", 15);
-            return;
-        }
+        operation_part(left_side, right_side, queue_list->value);
         if(queue_list->next != NULL){
             deque(&queue_list);
         }
         else  {
-            printf("%d\n",stack_list->value);
-            return;
+            return stack_list->value;
         }
     }
 }
@@ -172,7 +160,7 @@ int main(int argc, char** argv)
         // fill_with_null(task, (my_strlen(argv[1]) + 1));
         my_strcpy(task, print_error(argv[1]));
         convert_to_posfix(task);
-        math_part();
+        printf("%d\n",math_part());
         free(task);
         return 0;
     }
